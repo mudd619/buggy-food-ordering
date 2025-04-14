@@ -11,7 +11,6 @@ const CartPage: NextPage = () => {
   const { items, removeItem, updateQuantity, clearCart, getTotalPrice } =
     useCartStore();
   const router = useRouter();
-
   const [calculatedTotal, setCalculatedTotal] = useState(0);
   const [calculatedSubtotal, setCalculatedSubtotal] = useState(0);
 
@@ -28,6 +27,11 @@ const CartPage: NextPage = () => {
   };
 
   const proceedToCheckout = () => {
+    const isLoggedIn = sessionStorage.getItem("isLoggedIn");
+    if(!isLoggedIn){
+      toast.error("Please login to proceed");
+      return;
+    }
     if (items.length === 0) {
       toast.error("Your cart is empty");
       return;
@@ -115,10 +119,13 @@ const CartPage: NextPage = () => {
                               <div className="flex items-center border border-gray-300 rounded">
                                 <button
                                   onClick={() =>
+                                  {
+                                    if((item.quantity - 1) <= 0) return;
                                     handleQuantityChange(
                                       item.id,
                                       item.quantity - 1
                                     )
+                                  }
                                   }
                                   className="px-3 py-1 text-gray-600 hover:bg-gray-100"
                                   aria-label="Decrease quantity"

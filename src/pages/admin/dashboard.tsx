@@ -9,6 +9,10 @@ interface DashboardStats {
   pendingOrders: number;
 }
 
+interface OrderStats {
+  status: string;
+}
+
 export default function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStats>({
     totalOrders: 0,
@@ -32,7 +36,7 @@ export default function AdminDashboard() {
         ]);
 
         const pendingOrders = ordersRes.data.orders.filter(
-          (order: any) => order.status === "pending"
+          (order: OrderStats) => order.status === "pending"
         ).length;
 
         setStats({
