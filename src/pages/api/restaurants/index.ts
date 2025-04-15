@@ -58,6 +58,7 @@ export default async function handler(
       const totalPages = Math.ceil(totalCount / limit);
       console.log("API: Pagination data:", { totalCount, totalPages });
 
+      
       let restaurants = await Restaurant.find(query)
         .skip(skip)
         .limit(limit)

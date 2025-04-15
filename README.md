@@ -1,5 +1,5 @@
 # Food Ordering Application
-# 16.13.1
+
 # Submission
 
 - You're required to fork the repo and submit a pull request for your changes

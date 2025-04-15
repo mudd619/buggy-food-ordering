@@ -3,7 +3,7 @@ import connectDB from "@/lib/db";
 import User from "@/models/User";
 import jwt from "jsonwebtoken";
 
-const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const EMAIL_REGEX = /\S+@\S+\.\S+/;
 
 export default async function handler(
   req: NextApiRequest,
@@ -32,14 +32,6 @@ export default async function handler(
         .json({ message: "Password must be at least 8 characters long" });
     }
 
-    //to check if email already exists
-    const ifExisting = await User.findOne({email: email.toLowerCase()}, {_id: 1}, {lean: true});
-    if(ifExisting){
-      return res
-      .status(500)
-      .json({ message: "Email already exists!" });
-    }
-
     const user = await User.create({
       name,
       email: email.toLowerCase(),
@@ -49,10 +41,7 @@ export default async function handler(
 
     const token = jwt.sign(
       { id: user._id },
-      process.env.JWT_SECRET || "fallback_secret_do_not_use_in_production",
-      {
-        expiresIn: 60*5
-      }
+      process.env.JWT_SECRET || "fallback_secret_do_not_use_in_production"
     );
 
     return res.status(201).json({

@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { toast } from "react-hot-toast";
 
 type FormData = {
   name: string;
@@ -43,7 +42,7 @@ export default function Register() {
         password: data.password,
       });
 
-      toast.success("Registered successfully");
+      
       router.push("/signin");
     } catch (err: unknown) {
       
@@ -153,10 +152,7 @@ export default function Register() {
                       value: 8,
                       message: "Password must be at least 8 characters",
                     },
-                    maxLength: {
-                      value: 20,
-                      message: "Password cannot be more than 20 characters",
-                    },
+                    
                   })}
                 />
                 {errors.password && (
