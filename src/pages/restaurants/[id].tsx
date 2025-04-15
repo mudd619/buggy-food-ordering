@@ -107,16 +107,27 @@ const RestaurantDetail: NextPage = () => {
     (menuItem: MenuItem) => {
       if (!restaurant) return;
 
+      //check if restaurant is open
+      if(!isRestaurantOpen){
+        toast.error("Selected restaurant is closed");
+        return;
+      }
+      
       const restaurantId = restaurant._id || restaurant.id || "";
 
       const cartItemId = `${restaurantId}-${menuItem.name}`;
 
-      addItem({
+      const addedItem = addItem({
         id: cartItemId,
         restaurantId: restaurantId,
         menuItem,
         quantity: 1,
       });
+      
+      if(!addedItem){
+        toast.error("Items from another restaurant already exists");
+        return;
+      }
 
       toast.success("Item added to cart");
     },
@@ -242,7 +253,7 @@ const RestaurantDetail: NextPage = () => {
                       onClick={() => setSelectedCategory(null)}
                       className={`px-4 py-2 rounded-full whitespace-nowrap ${
                         selectedCategory === null
-                          ? "bg-primary text-white"
+                          ? "bg-primary"
                           : "bg-gray-200 text-gray-800"
                       }`}
                     >
@@ -254,7 +265,7 @@ const RestaurantDetail: NextPage = () => {
                         onClick={() => setSelectedCategory(category)}
                         className={`px-4 py-2 rounded-full whitespace-nowrap ${
                           selectedCategory === category
-                            ? "bg-primary text-white"
+                            ? "bg-primary"
                             : "bg-gray-200 text-gray-800"
                         }`}
                       >
@@ -284,7 +295,8 @@ const RestaurantDetail: NextPage = () => {
                             </span>
                             <button
                               onClick={() => addItemToCart(item)}
-                              className="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white font-bold"
+                              className={`px-3 py-1 rounded ${item.available ? "bg-red-600 hover:bg-red-700" : "bg-red-300"} text-white font-bold`}
+                              disabled={!item.available}
                             >
                               Add to Cart
                             </button>
